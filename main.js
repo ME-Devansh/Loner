@@ -1,4 +1,6 @@
 import { GameLoop } from "./src/gameloop";
+import { gridCells } from "./src/helpers/grid";
+import { moveTowards } from "./src/helpers/movetowards";
 import { DOWN, Input, LEFT, RIGHT, UP } from "./src/input";
 import { resources } from "./src/resource";
 import { Sprite } from "./src/sprite";
@@ -25,9 +27,10 @@ const hero = new Sprite({
 	vFrames: 8,
 	frame: 1,
 	frameSize: new Vector2({ x: 32, y: 32 }),
+	position: new Vector2({ x: gridCells(6), y: gridCells(5) }),
 });
 
-const heroPos = new Vector2({ x: 16 * 6, y: 16 * 5 });
+const heroDestinationPosition = hero.position.duplicate();
 
 const shadow = new Sprite({
 	resource: resources.images.shadow,
@@ -37,19 +40,40 @@ const shadow = new Sprite({
 const input = new Input();
 
 const update = () => {
+	const distance = moveTowards(hero, heroDestinationPosition, 1);
+	// Attempt to move again if the hero is at his position
+	const hasArrived = distance <= 1;
+	if (hasArrived) {
+		tryMove();
+	}
+	return;
+};
+
+const tryMove = () => {
+	if (!input.direction) {
+		return;
+	}
+	let nextY = heroDestinationPosition.y;
+	let nextX = heroDestinationPosition.x;
+	const gridSize = 16;
+
 	if (input.direction === DOWN) {
-		heroPos.y += 1;
+		nextY += gridSize;
 		hero.frame = 0;
 	} else if (input.direction === UP) {
-		heroPos.y -= 1;
+		nextY -= gridSize;
 		hero.frame = 6;
 	} else if (input.direction === LEFT) {
-		heroPos.x -= 1;
+		nextX -= gridSize;
 		hero.frame = 9;
 	} else if (input.direction === RIGHT) {
-		heroPos.x += 1;
+		nextX += gridSize;
 		hero.frame = 3;
 	}
+
+	// TODO: check if that space is free
+	heroDestinationPosition.x = nextX;
+	heroDestinationPosition.y = nextY;
 };
 
 const draw = () => {
@@ -69,8 +93,8 @@ const draw = () => {
 
 	// Center the hero in the cell
 	const heroOffset = new Vector2({ x: -8, y: -21 });
-	const heroPosX = heroPos.x + heroOffset.x;
-	const heroPosY = heroPos.y + heroOffset.y;
+	const heroPosX = hero.position.x + heroOffset.x;
+	const heroPosY = hero.position.y + heroOffset.y;
 
 	shadow.drawImage(ctx, heroPosX, heroPosY);
 	hero.drawImage(ctx, heroPosX, heroPosY);
