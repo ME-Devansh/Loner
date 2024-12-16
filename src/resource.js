@@ -4,12 +4,12 @@ class Resources {
 		this.toLoad = {
 			sky: "/sprites/sky.png",
 			ground: "/sprites/ground.png",
-			hero: "/sprites/heor-sheet.png",
+			hero: "/sprites/hero-sheet.png",
 			shadow: "/sprites/shadow.png",
 		};
 		// A bucket to keep all our images
 		this.images = {};
-        //Load each image
+		//Load each image
 		Object.keys(this.toLoad).forEach((key) => {
 			const img = new Image();
 			img.src = this.toLoad[key];
@@ -26,5 +26,3 @@ class Resources {
 
 // Craete one instance for the whole app to use
 export const resources = new Resources();
-
-
