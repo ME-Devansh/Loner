@@ -1,7 +1,8 @@
 import { GameLoop } from "./src/gameloop";
-import { gridCells } from "./src/helpers/grid";
+import { gridCells, isSpaceFree } from "./src/helpers/grid";
 import { moveTowards } from "./src/helpers/movetowards";
 import { DOWN, Input, LEFT, RIGHT, UP } from "./src/input";
+import { walls } from "./src/levels/level1";
 import { resources } from "./src/resource";
 import { Sprite } from "./src/sprite";
 import { Vector2 } from "./src/vector2";
@@ -71,7 +72,9 @@ const tryMove = () => {
 		hero.frame = 3;
 	}
 
-	// TODO: check if that space is free
+	if (!isSpaceFree(walls, nextX, nextY)) {
+		return;
+	}
 	heroDestinationPosition.x = nextX;
 	heroDestinationPosition.y = nextY;
 };
