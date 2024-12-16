@@ -1,4 +1,5 @@
 import { GameLoop } from "./src/gameloop";
+import { DOWN, Input, LEFT, RIGHT, UP } from "./src/input";
 import { resources } from "./src/resource";
 import { Sprite } from "./src/sprite";
 import { Vector2 } from "./src/vector2";
@@ -33,8 +34,22 @@ const shadow = new Sprite({
 	frameSize: new Vector2({ x: 32, y: 32 }),
 });
 
+const input = new Input();
+
 const update = () => {
-	hero.frame += 1;
+	if (input.direction === DOWN) {
+		heroPos.y += 1;
+		hero.frame = 0;
+	} else if (input.direction === UP) {
+		heroPos.y -= 1;
+		hero.frame = 6;
+	} else if (input.direction === LEFT) {
+		heroPos.x -= 1;
+		hero.frame = 9;
+	} else if (input.direction === RIGHT) {
+		heroPos.x += 1;
+		hero.frame = 3;
+	}
 };
 
 const draw = () => {
