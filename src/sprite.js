@@ -9,6 +9,7 @@ export class Sprite {
 		frame, // which frame we want to show
 		scale, // how large to draw this image
 		position, // where to draw it (top left corner)
+		animations,
 	}) {
 		this.resource = resource;
 		this.frameSize = frameSize ?? new Vector2({ x: 16, y: 16 });
@@ -18,6 +19,7 @@ export class Sprite {
 		this.frameMap = new Map();
 		this.scale = scale ?? 1;
 		this.position = position ?? new Vector2({});
+		this.animations = animations ?? null;
 		this.buildFrameMap();
 	}
 
@@ -64,5 +66,12 @@ export class Sprite {
 			frameSizeX * this.scale,
 			frameSizeY * this.scale
 		);
+	}
+	step(delta) {
+		if (!this.animations) {
+			return;
+		}
+		this.animations.step(delta);
+		this.frame = this.animations.frame;
 	}
 }
