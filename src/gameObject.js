@@ -6,14 +6,20 @@ export class GameObject {
 		this.position = position ?? new Vector2({});
 		this.children = [];
 		this.parent = null;
+		this.hasReadyBeenCalled = false;
 	}
 	step(_delta) {}
 	stepEntry(delta, root) {
 		// Call updates on all the children first
 		this.children.forEach((child) => child.stepEntry(delta, root));
+		if (!this.hasReadyBeenCalled) {
+			this.hasReadyBeenCalled = true;
+			this.ready();
+		}
 		// Call all implemented step code
 		this.step(delta, root);
 	}
+	ready() {}
 
 	draw(ctx, x, y) {
 		const drawPosX = x + this.position.x;
@@ -28,7 +34,6 @@ export class GameObject {
 		this.children.push(gameObject);
 	}
 	removeChild(gameObject) {
-		console.log(gameObject);
 		events.unsubscribe(gameObject);
 		this.children = this.children.filter((child) => child != gameObject);
 	}

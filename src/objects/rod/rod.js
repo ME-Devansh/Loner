@@ -12,6 +12,15 @@ export class Rod extends GameObject {
 			position: new Vector2({ x: 0, y: -5 }),
 		});
 		this.addChild(sprite);
+	}
+	onCollideWithHero() {
+		this.destroy();
+		events.emit("HERO_PICKS_UP_ITEM", {
+			image: resources.images.rod,
+			position: this.position,
+		});
+	}
+	ready() {
 		events.on("HERO_POSITION", this, (pos) => {
 			const roundedHeroX = Math.round(pos.x);
 			const roundedHeroY = Math.round(pos.y);
@@ -21,13 +30,6 @@ export class Rod extends GameObject {
 			) {
 				this.onCollideWithHero();
 			}
-		});
-	}
-	onCollideWithHero() {
-		this.destroy();
-		events.emit("HERO_PICKS_UP_ITEM", {
-			image: resources.images.rod,
-			position: this.position,
 		});
 	}
 }
