@@ -4,6 +4,7 @@ import { GameObject } from "./src/gameObject";
 import { gridCells } from "./src/helpers/grid";
 import { Input } from "./src/input";
 import { Hero } from "./src/objects/hero/hero";
+import { Inventory } from "./src/objects/inventory/inventory";
 import { Rod } from "./src/objects/rod/rod";
 import { resources } from "./src/resource";
 import { Sprite } from "./src/sprite";
@@ -39,6 +40,8 @@ mainScene.input = new Input();
 const camera = new Camera();
 mainScene.addChild(camera);
 
+const inventory = new Inventory();
+
 const update = (delta) => {
 	mainScene.stepEntry(delta, mainScene);
 };
@@ -55,6 +58,9 @@ const draw = () => {
 	mainScene.draw(ctx, 0, 0);
 	// Restore to original state
 	ctx.restore();
+
+	// Draw anything above the game world
+	inventory.draw(ctx, 0, 0);
 };
 
 const gameLoop = new GameLoop(update, draw);
